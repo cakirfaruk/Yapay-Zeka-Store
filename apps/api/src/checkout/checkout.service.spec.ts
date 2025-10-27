@@ -11,6 +11,8 @@ const createLicenses = () => ({
   issue: jest.fn(),
 });
 
+const asMock = (fn: unknown) => fn as jest.Mock;
+
 describe('CheckoutService', () => {
   let prisma: ReturnType<typeof createPrisma>;
   let licenses: ReturnType<typeof createLicenses>;
@@ -23,9 +25,14 @@ describe('CheckoutService', () => {
   });
 
   it('creates purchase and license for published app', async () => {
-    prisma.app.findUnique.mockResolvedValue({ id: 'app-1', status: 'published', priceCents: 3900, pricingModel: 'subscription' });
-    prisma.purchase.create.mockResolvedValue({ id: 'purchase-1' });
-    licenses.issue.mockResolvedValue({ id: 'license-1', token: 'signed-token' });
+    asMock(prisma.app.findUnique).mockResolvedValue({
+      id: 'app-1',
+      status: 'published',
+      priceCents: 3900,
+      pricingModel: 'subscription',
+    });
+    asMock(prisma.purchase.create).mockResolvedValue({ id: 'purchase-1' });
+    asMock(licenses.issue).mockResolvedValue({ id: 'license-1', token: 'signed-token' });
 
     const result = await service.createSession('user-1', 'app-1', 'device-9');
 
@@ -39,7 +46,7 @@ describe('CheckoutService', () => {
   });
 
   it('throws when app is missing or not published', async () => {
-    prisma.app.findUnique.mockResolvedValue({ id: 'app-2', status: 'draft' });
+    asMock(prisma.app.findUnique).mockResolvedValue({ id: 'app-2', status: 'draft' });
 
     await expect(service.createSession('user-1', 'app-2')).rejects.toBeInstanceOf(NotFoundException);
     expect(prisma.purchase.create).not.toHaveBeenCalled();
