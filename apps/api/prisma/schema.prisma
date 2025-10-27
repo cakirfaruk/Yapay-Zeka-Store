@@ -197,7 +197,7 @@ model Purchase {
   provider     String
   status       String
   license      License?  @relation("LicensePurchase", fields: [licenseId], references: [id])
-  licenseId    String?
+  licenseId    String?   @unique
   createdAt    DateTime  @default(now())
   couponCode   String?
   couponRedemptions CouponRedemption[]
