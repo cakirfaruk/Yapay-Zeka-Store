@@ -1,0 +1,13 @@
+device:
+  id: sim-device-001
+mqtt:
+  url: mqtt://localhost:1883
+  telemetryTopic: telemetry
+licenses:
+  publicKeys:
+    - 7Bcrk61eVjv0kyxw4SRQNMNUZ+8u/U1k6/gZaDRn4r8=
+ota:
+  artifactStore: http://localhost:9000/artifacts
+  jobTopic: ota
+gateway:
+  url: http://localhost:4000

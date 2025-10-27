@@ -1,0 +1,49 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: aimarket
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports: ['6379:6379']
+      mqtt:
+        image: eclipse-mosquitto:2
+        ports: ['1883:1883']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.15.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+      - run: pnpm install
+      - name: Prisma migrate
+        run: pnpm --filter @apps/api exec prisma db push
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aimarket
+      - name: Seed database
+        run: pnpm --filter @apps/api prisma:seed
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aimarket
+      - name: Run API tests
+        run: pnpm --filter @apps/api test -- --runInBand
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/aimarket
+      - name: Run web lint
+        run: pnpm --filter @apps/web lint

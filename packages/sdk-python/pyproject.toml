@@ -1,0 +1,9 @@
+[project]
+name = "sdk_python"
+version = "0.0.1"
+description = "AI Marketplace Python SDK"
+requires-python = ">=3.10"
+dependencies = ["pydantic>=1.10"]
+
+[tool.poetry]
+packages = [{ include = "sdk_python" }]

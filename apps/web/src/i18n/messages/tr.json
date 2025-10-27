@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "store": "Mağaza",
+    "devices": "Cihazlarım",
+    "developer": "Geliştirici Portalı",
+    "admin": "Yönetim",
+    "cart": "Sepet",
+    "pricing": "Fiyatlandırma"
+  },
+  "home": {
+    "hero": "Her sektör için hazır yapay zeka uygulamaları",
+    "subtitle": "Güvenlikten perakendeye seçili modelleri inceleyin ve cihazlarınıza dağıtın.",
+    "cta": "Kataloğu keşfet"
+  },
+  "devices": {
+    "title": "Cihazlarım",
+    "add": "Cihaz kodu üret",
+    "empty": "Henüz cihaz eklenmedi",
+    "deploy": "Yükle",
+    "status": "Durum"
+  },
+  "checkout": {
+    "buy": "Satın al",
+    "success": "Satın alma tamamlandı",
+    "deploy": "Cihaza dağıt",
+    "back": "Mağazaya dön"
+  },
+  "developer": {
+    "title": "Geliştirici Uygulamaları",
+    "new": "Yeni uygulama",
+    "submit": "İncelemeye gönder",
+    "checklist": "Kontrol listesi"
+  },
+  "admin": {
+    "reviews": "İnceleme kuyruğu",
+    "approve": "Onayla",
+    "requestChanges": "Revizyon iste"
+  }
+}

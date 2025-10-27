@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "store": "Store",
+    "devices": "Devices",
+    "developer": "Developer Portal",
+    "admin": "Admin",
+    "cart": "Cart",
+    "pricing": "Pricing"
+  },
+  "home": {
+    "hero": "Discover AI applications for every industry",
+    "subtitle": "Browse curated models for security, retail, smart city, agriculture and more.",
+    "cta": "Explore catalog"
+  },
+  "devices": {
+    "title": "My Devices",
+    "add": "Generate claim code",
+    "empty": "No devices yet",
+    "deploy": "Deploy",
+    "status": "Status"
+  },
+  "checkout": {
+    "buy": "Buy now",
+    "success": "Purchase completed",
+    "deploy": "Deploy to a device",
+    "back": "Back to catalog"
+  },
+  "developer": {
+    "title": "Developer Apps",
+    "new": "Create application",
+    "submit": "Submit for review",
+    "checklist": "Checklist"
+  },
+  "admin": {
+    "reviews": "Review queue",
+    "approve": "Approve",
+    "requestChanges": "Request changes"
+  }
+}

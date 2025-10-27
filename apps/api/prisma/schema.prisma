@@ -1,0 +1,445 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DEVELOPER
+  BUYER
+}
+
+enum AppStatus {
+  draft
+  in_review
+  changes_requested
+  published
+  suspended
+}
+
+enum AppVersionStatus {
+  draft
+  in_review
+  rejected
+  approved
+}
+
+enum LicenseKind {
+  subscription
+  perpetual
+  device_locked
+}
+
+enum DeploymentStatus {
+  pending
+  queued
+  in_progress
+  installed
+  failed
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     UserOrganization[]
+  devices   Device[]
+}
+
+model User {
+  id            String             @id @default(cuid())
+  email         String             @unique
+  name          String?
+  passwordHash  String?
+  role          Role               @default(BUYER)
+  organizations UserOrganization[]
+  purchases     Purchase[]
+  licenses      License[]
+  apps          App[]              @relation("AppOwner")
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+}
+
+model UserOrganization {
+  id             String        @id @default(cuid())
+  user           User          @relation(fields: [userId], references: [id])
+  userId         String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  organizationId String
+  roles          String[]      @default([])
+  createdAt      DateTime      @default(now())
+}
+
+model App {
+  id              String            @id @default(cuid())
+  name            String
+  slug            String            @unique
+  category        String
+  synopsis        String
+  pricingModel    String
+  priceCents      Int
+  status          AppStatus         @default(draft)
+  supportedBoards String[]          @default([])
+  owner           User              @relation("AppOwner", fields: [ownerId], references: [id])
+  ownerId         String
+  currentVersion  AppVersion?       @relation("CurrentVersion", fields: [currentVersionId], references: [id])
+  currentVersionId String?
+  versions        AppVersion[]
+  reviews         AppReview[]
+  ratingAvg       Float             @default(0)
+  ratingCount     Int               @default(0)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+}
+
+model AppVersion {
+  id         String            @id @default(cuid())
+  app        App               @relation(fields: [appId], references: [id])
+  appId      String
+  semver     String
+  status     AppVersionStatus  @default(draft)
+  changelog  String?
+  artifactUrl String
+  sha256     String
+  manifest   Json?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+  isCurrent  App?              @relation("CurrentVersion")
+}
+
+model AppReview {
+  id         String     @id @default(cuid())
+  app        App        @relation(fields: [appId], references: [id])
+  appId      String
+  reviewer   User       @relation(fields: [reviewerId], references: [id])
+  reviewerId String
+  status     AppStatus
+  notes      String?
+  createdAt  DateTime   @default(now())
+}
+
+model Device {
+  id         String       @id @default(cuid())
+  name       String
+  org        Organization @relation(fields: [orgId], references: [id])
+  orgId      String
+  hw         String
+  tags       String[]     @default([])
+  lastSeen   DateTime?
+  claims     DeviceClaim[]
+  deployments Deployment[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+}
+
+model DeviceClaim {
+  codeHash   String   @id
+  device     Device?  @relation(fields: [deviceId], references: [id])
+  deviceId   String?
+  org        Organization? @relation(fields: [orgId], references: [id])
+  orgId      String?
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+}
+
+model Deployment {
+  id            String           @id @default(cuid())
+  device        Device           @relation(fields: [deviceId], references: [id])
+  deviceId      String
+  appVersion    AppVersion       @relation(fields: [appVersionId], references: [id])
+  appVersionId  String
+  status        DeploymentStatus @default(pending)
+  startedAt     DateTime?        
+  completedAt   DateTime?
+  logs          String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+}
+
+model Purchase {
+  id           String    @id @default(cuid())
+  app          App       @relation(fields: [appId], references: [id])
+  appId        String
+  buyer        User      @relation(fields: [buyerId], references: [id])
+  buyerId      String
+  amountCents  Int
+  provider     String
+  status       String
+  license      License?  @relation(fields: [licenseId], references: [id])
+  licenseId    String?
+  createdAt    DateTime  @default(now())
+  couponCode   String?
+}
+
+model License {
+  id          String       @id @default(cuid())
+  token       String       @unique
+  app         App          @relation(fields: [appId], references: [id])
+  appId       String
+  buyer       User         @relation(fields: [buyerId], references: [id])
+  buyerId     String
+  device      Device?      @relation(fields: [deviceId], references: [id])
+  deviceId    String?
+  kind        LicenseKind
+  expiresAt   DateTime?
+  payload     Json
+  createdAt   DateTime     @default(now())
+}
+
+model Subscription {
+  id           String    @id @default(cuid())
+  app          App       @relation(fields: [appId], references: [id])
+  appId        String
+  user         User      @relation(fields: [userId], references: [id])
+  userId       String
+  status       String
+  currentPeriodEnd DateTime
+  createdAt    DateTime  @default(now())
+}
+
+model Payout {
+  id              String  @id @default(cuid())
+  developer       User    @relation(fields: [developerId], references: [id])
+  developerId     String
+  month           String
+  grossCents      Int
+  commissionPct   Int
+  commissionCents Int
+  refundsCents    Int
+  netCents        Int
+  generatedAt     DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  app       App      @relation(fields: [appId], references: [id])
+  appId     String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+}
+
+model TelemetrySample {
+  id        BigInt   @id @default(autoincrement())
+  device    Device   @relation(fields: [deviceId], references: [id])
+  deviceId  String
+  ts        DateTime
+  cpu       Float?
+  ram       Float?
+  disk      Float?
+  netIn     Int?
+  netOut    Int?
+  fps       Float?
+  latencyMs Int?
+  appId     String?
+  createdAt DateTime @default(now())
+
+  @@index([deviceId, ts])
+}
+
+model Event {
+  id      BigInt  @id @default(autoincrement())
+  userId  String?
+  type    String
+  appId   String?
+  at      DateTime @default(now())
+  meta    Json?
+
+  @@index([userId, at])
+  @@index([appId, at])
+}
+
+model PricingTier {
+  id            String   @id @default(cuid())
+  name          String
+  kind          String
+  monthlyCents  Int
+  annualCents   Int
+  features      String[]
+  active        Boolean  @default(true)
+}
+
+model UserTier {
+  userId    String @id
+  tier      PricingTier @relation(fields: [tierId], references: [id])
+  tierId    String
+  billingInterval String @default("monthly")
+  renewsAt DateTime?
+}
+
+model Coupon {
+  id             String   @id @default(cuid())
+  code           String   @unique
+  type           String
+  amount         Int
+  startsAt       DateTime?
+  endsAt         DateTime?
+  maxRedemptions Int?
+  perUserLimit   Int?
+  appliesToAppId String?
+  minSubtotalCents Int?
+  active         Boolean @default(true)
+  usageCount     Int     @default(0)
+}
+
+model CouponRedemption {
+  id         String   @id @default(cuid())
+  coupon     Coupon   @relation(fields: [couponId], references: [id])
+  couponId   String
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  purchase   Purchase? @relation(fields: [purchaseId], references: [id])
+  purchaseId String?
+  discountCents Int
+  at         DateTime @default(now())
+}
+
+model Affiliate {
+  id            String @id @default(cuid())
+  user          User   @relation(fields: [userId], references: [id])
+  userId        String
+  commissionPct Int    @default(1000)
+  status        String @default("active")
+  links         AffiliateLink[]
+}
+
+model AffiliateLink {
+  id          String @id @default(cuid())
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
+  affiliateId String
+  slug        String @unique
+  target      String
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  clicks      AffiliateClick[]
+}
+
+model AffiliateClick {
+  id        String @id @default(cuid())
+  link      AffiliateLink @relation(fields: [linkId], references: [id])
+  linkId    String
+  anonId    String?
+  userId    String?
+  ip        String?
+  ua        String?
+  at        DateTime @default(now())
+}
+
+model Attribution {
+  id          String @id @default(cuid())
+  user        User   @relation(fields: [userId], references: [id])
+  userId      String
+  affiliate   Affiliate? @relation(fields: [affiliateId], references: [id])
+  affiliateId String?
+  firstClickAt DateTime
+  lastClickAt  DateTime
+  expiresAt    DateTime
+}
+
+model AffiliatePayout {
+  id          String @id @default(cuid())
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
+  affiliateId String
+  month       String
+  commissionCents Int
+  createdAt   DateTime @default(now())
+}
+
+model ReleaseNote {
+  id        String  @id @default(cuid())
+  version   String
+  title     String
+  bodyMd    String
+  visible   Boolean @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Notification {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  kind      String
+  refId     String?
+  seen      Boolean @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Consent {
+  id        String  @id @default(cuid())
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    String?
+  anonId    String?
+  version   Int     @default(1)
+  analytics Boolean @default(false)
+  marketing Boolean @default(false)
+  ip        String?
+  ua        String?
+  at        DateTime @default(now())
+}
+
+model DsarJob {
+  id        String  @id @default(cuid())
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+  state     String
+  url       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model AuditLog {
+  id        String  @id @default(cuid())
+  at        DateTime @default(now())
+  actorId   String?
+  actorRole String?
+  ip        String?
+  action    String
+  entity    String?
+  diff      Json?
+  meta      Json?
+}
+
+model SupportTicket {
+  id        String  @id @default(cuid())
+  user      User?   @relation(fields: [userId], references: [id])
+  userId    String?
+  email     String
+  subject   String
+  message   String
+  state     String @default("open")
+  createdAt DateTime @default(now())
+}
+
+model PricingAnalyticsCache {
+  id        String @id @default(cuid())
+  payload   Json
+  createdAt DateTime @default(now())
+}
+
+model AppRecommendation {
+  appId      String
+  neighborId String
+  score      Float
+  createdAt  DateTime @default(now())
+
+  @@id([appId, neighborId])
+}
+
+model UserMeta {
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+  key    String
+  value  String
+
+  @@id([userId, key])
+}
