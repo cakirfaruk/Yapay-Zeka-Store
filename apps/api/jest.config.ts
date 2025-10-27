@@ -7,10 +7,8 @@ const config: Config = {
   testMatch: ['<rootDir>/src/**/*.spec.ts'],
   moduleFileExtensions: ['ts', 'js'],
   extensionsToTreatAsEsm: ['.ts'],
-  globals: {
-    'ts-jest': {
-      useESM: true,
-    },
+  transform: {
+    '^.+\\.(t|j)s$': ['ts-jest', { useESM: true }],
   },
 };
 
