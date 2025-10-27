@@ -16,7 +16,7 @@ export default async function CatalogPage({ params, searchParams }: { params: { 
         <form className="mt-6 flex max-w-md items-center rounded-full border border-slate-700 bg-slate-900/60 px-4 py-2">
           <input
             className="flex-1 bg-transparent text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none"
-            placeholder="Ara..."
+            placeholder={t('searchPlaceholder')}
             name="q"
             defaultValue={searchParams?.q ?? ''}
           />

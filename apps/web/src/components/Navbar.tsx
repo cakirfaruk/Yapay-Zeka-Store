@@ -7,6 +7,7 @@ import clsx from 'clsx';
 
 const links = [
   { href: '', key: 'nav.store' },
+  { href: 'cart', key: 'nav.cart' },
   { href: 'devices', key: 'nav.devices' },
   { href: 'developer', key: 'nav.developer' },
   { href: 'admin', key: 'nav.admin' },

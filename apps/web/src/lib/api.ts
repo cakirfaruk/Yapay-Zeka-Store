@@ -26,9 +26,22 @@ async function fetchJson<T>(input: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
-export async function listApps(params: { search?: string; locale?: string; email?: string } = {}) {
+export async function listApps(
+  params: {
+    search?: string;
+    email?: string;
+    limit?: number;
+    category?: string;
+    board?: string;
+    page?: number;
+  } = {},
+) {
   const query = new URLSearchParams();
   if (params.search) query.set('search', params.search);
+  if (params.limit) query.set('limit', String(params.limit));
+  if (params.category) query.set('category', params.category);
+  if (params.board) query.set('board', params.board);
+  if (params.page) query.set('page', String(params.page));
   const headers: Record<string, string> = {};
   if (params.email) headers['x-user-email'] = params.email;
   const qs = query.toString();
