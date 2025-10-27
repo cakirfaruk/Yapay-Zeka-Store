@@ -349,22 +349,26 @@ async function main() {
     },
   });
 
+  const ppeApp = await prisma.app.findFirstOrThrow({ where: { slug: 'ppe-detection' } });
+
+  const seededLicense = await prisma.license.create({
+    data: {
+      appId: ppeApp.id,
+      buyerId: buyer.id,
+      kind: LicenseKind.subscription,
+      payload: { sub: buyer.id, appId: 'ppe-detection', exp: null },
+      token: 'seed-license-token',
+    },
+  });
+
   await prisma.purchase.create({
     data: {
-      appId: (await prisma.app.findFirst({ where: { slug: 'ppe-detection' } }))!.id,
+      appId: ppeApp.id,
       buyerId: buyer.id,
       amountCents: 3900,
       provider: 'dummy',
       status: 'succeeded',
-      license: {
-        create: {
-          appId: (await prisma.app.findFirst({ where: { slug: 'ppe-detection' } }))!.id,
-          buyerId: buyer.id,
-          kind: LicenseKind.subscription,
-          payload: { sub: buyer.id, appId: 'ppe-detection', exp: null },
-          token: 'seed-license-token',
-        },
-      },
+      licenseId: seededLicense.id,
     },
   });
 
