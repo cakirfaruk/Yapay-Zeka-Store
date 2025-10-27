@@ -4,16 +4,16 @@ import { NotFoundException } from '@nestjs/common';
 
 const createPrisma = () => ({
   app: {
-    findUnique: jest.fn<Promise<any>, any[]>(),
+    findUnique: jest.fn(),
   },
   purchase: {
-    create: jest.fn<Promise<any>, any[]>(),
-    update: jest.fn<Promise<any>, any[]>(),
+    create: jest.fn(),
+    update: jest.fn(),
   },
 });
 
 const createLicenses = () => ({
-  issue: jest.fn<Promise<any>, any[]>(),
+  issue: jest.fn(),
 });
 
 const asMock = (fn: unknown) => fn as jest.MockedFunction<any>;

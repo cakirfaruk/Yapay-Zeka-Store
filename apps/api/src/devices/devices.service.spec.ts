@@ -4,19 +4,19 @@ import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 const createPrisma = () => ({
   userOrganization: {
-    findFirst: jest.fn<Promise<any>, any[]>(),
-    findMany: jest.fn<Promise<any>, any[]>(),
+    findFirst: jest.fn(),
+    findMany: jest.fn(),
   },
   deviceClaim: {
-    create: jest.fn<Promise<any>, any[]>(),
-    findFirst: jest.fn<Promise<any>, any[]>(),
-    delete: jest.fn<Promise<any>, any[]>(),
+    create: jest.fn(),
+    findFirst: jest.fn(),
+    delete: jest.fn(),
   },
   device: {
-    create: jest.fn<Promise<any>, any[]>(),
-    findMany: jest.fn<Promise<any>, any[]>(),
-    findUnique: jest.fn<Promise<any>, any[]>(),
-    update: jest.fn<Promise<any>, any[]>(),
+    create: jest.fn(),
+    findMany: jest.fn(),
+    findUnique: jest.fn(),
+    update: jest.fn(),
   },
 });
 

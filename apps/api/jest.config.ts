@@ -11,7 +11,16 @@ const config: Config = {
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {
-    '^.+\\.(t|j)s$': ['ts-jest', { useESM: true }],
+    '^.+\\.(t|j)s$': [
+      'ts-jest',
+      {
+        useESM: true,
+        tsconfig: './tsconfig.json',
+        diagnostics: {
+          ignoreCodes: [1206, 1241, 1270],
+        },
+      },
+    ],
   },
 };
 
