@@ -2,7 +2,7 @@ import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard.js';
 import { RolesGuard } from '../auth/roles.guard.js';
 import { Roles } from '../auth/roles.decorator.js';
-import { Role } from '@prisma/client';
+import { AppStatus, Role } from '@prisma/client';
 import { PrismaService } from '../common/prisma.service.js';
 
 @Controller('admin')
@@ -12,9 +12,10 @@ export class AdminController {
   constructor(private readonly prisma: PrismaService) {}
 
   @Get('review-queue')
-  async reviewQueue(@Query('status') status: string = 'in_review') {
+  async reviewQueue(@Query('status') status?: AppStatus) {
+    const targetStatus = status ?? AppStatus.in_review;
     const apps = await this.prisma.app.findMany({
-      where: { status },
+      where: { status: targetStatus },
       include: { owner: true, versions: true },
     });
     return { items: apps };

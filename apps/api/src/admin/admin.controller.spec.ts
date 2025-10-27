@@ -1,4 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
+import { AppStatus } from '@prisma/client';
 import { AdminController } from './admin.controller.js';
 
 const prisma = {
@@ -10,7 +11,7 @@ describe('AdminController', () => {
   const controller = new AdminController(prisma as any);
 
   it('returns review queue filtered by status', async () => {
-    const response = await controller.reviewQueue('in_review');
+    const response = await controller.reviewQueue(AppStatus.in_review);
     expect(response.items).toHaveLength(1);
     expect(response.items[0].status).toBe('in_review');
   });

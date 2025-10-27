@@ -3,15 +3,20 @@ import { CheckoutService } from './checkout.service.js';
 import { NotFoundException } from '@nestjs/common';
 
 const createPrisma = () => ({
-  app: { findUnique: jest.fn() },
-  purchase: { create: jest.fn(), update: jest.fn() },
+  app: {
+    findUnique: jest.fn<Promise<any>, any[]>(),
+  },
+  purchase: {
+    create: jest.fn<Promise<any>, any[]>(),
+    update: jest.fn<Promise<any>, any[]>(),
+  },
 });
 
 const createLicenses = () => ({
-  issue: jest.fn(),
+  issue: jest.fn<Promise<any>, any[]>(),
 });
 
-const asMock = (fn: unknown) => fn as jest.Mock;
+const asMock = (fn: unknown) => fn as jest.MockedFunction<any>;
 
 describe('CheckoutService', () => {
   let prisma: ReturnType<typeof createPrisma>;
