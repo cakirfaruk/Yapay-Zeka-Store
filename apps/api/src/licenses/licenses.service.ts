@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service.js';
-import { LicenseKind } from '@prisma/client';
+import { LicenseKind, Prisma } from '@prisma/client';
 import nacl from 'tweetnacl';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import path from 'node:path';
@@ -95,7 +95,7 @@ export class LicensesService {
         buyerId,
         deviceId: deviceId ?? null,
         kind,
-        payload,
+        payload: payload as unknown as Prisma.JsonObject,
         token,
       },
     });

@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { PrismaService } from '../common/prisma.service.js';
-import { createHash } from 'node:crypto';
-import { nanoid } from 'nanoid';
+import { createHash, randomBytes } from 'node:crypto';
 
 @Injectable()
 export class DevicesService {
@@ -9,6 +8,16 @@ export class DevicesService {
 
   private hash(code: string) {
     return createHash('sha256').update(code).digest('hex');
+  }
+
+  private generateCode(length: number) {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const bytes = randomBytes(length);
+    let result = '';
+    for (let i = 0; i < length; i += 1) {
+      result += alphabet[bytes[i] % alphabet.length];
+    }
+    return result;
   }
 
   async listForUser(userId: string) {
@@ -35,7 +44,7 @@ export class DevicesService {
     if (!membership) {
       throw new ForbiddenException('User has no organization');
     }
-    const code = nanoid(6).toUpperCase();
+    const code = this.generateCode(6);
     const expires = new Date(Date.now() + 1000 * 60 * 10);
     await this.prisma.deviceClaim.create({
       data: {
@@ -55,7 +64,7 @@ export class DevicesService {
     }
     const device = await this.prisma.device.create({
       data: {
-        name: hwInfo?.name ?? `Device-${nanoid(4)}`,
+        name: hwInfo?.name ?? `Device-${this.generateCode(4)}`,
         hw: hwInfo?.model ?? 'unknown',
         orgId: claim.orgId!,
         tags: hwInfo?.tags ?? [],
