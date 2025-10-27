@@ -1,0 +1,66 @@
+{
+  "nav": {
+    "store": "Store",
+    "devices": "Devices",
+    "developer": "Developer Portal",
+    "admin": "Admin",
+    "cart": "Cart",
+    "pricing": "Pricing"
+  },
+  "home": {
+    "hero": "Discover AI applications for every industry",
+    "subtitle": "Browse curated models for security, retail, smart city, agriculture and more.",
+    "cta": "Explore catalog",
+    "searchPlaceholder": "Search AI apps..."
+  },
+  "devices": {
+    "title": "My Devices",
+    "add": "Generate claim code",
+    "empty": "No devices yet",
+    "deploy": "Deploy",
+    "status": "Status"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "buy": "Continue to checkout",
+    "review": "Review and confirm your purchase",
+    "summary": "Order summary",
+    "category": "Category",
+    "boards": "Supported boards",
+    "deviceLabel": "Deploy to device",
+    "devicePlaceholder": "Select device (optional)",
+    "deviceHelp": "Optional: auto-deploy to a registered device after purchase.",
+    "complete": "Complete payment",
+    "success": "Purchase completed",
+    "deploy": "Deploy to a device",
+    "back": "Back to catalog",
+    "empty": "Select an application from the store to continue.",
+    "viewCart": "View cart",
+    "editCart": "Back to cart",
+    "cartHint": "Want to keep browsing? Add this app to your cart for later.",
+    "addToCart": "Add to cart"
+  },
+  "developer": {
+    "title": "Developer Apps",
+    "new": "Create application",
+    "submit": "Submit for review",
+    "checklist": "Checklist"
+  },
+  "admin": {
+    "reviews": "Review queue",
+    "approve": "Approve",
+    "requestChanges": "Request changes"
+  },
+  "cart": {
+    "title": "Cart",
+    "subtitle": "Review items before completing your purchase.",
+    "empty": "Your cart is empty. Explore the catalog to add AI apps.",
+    "checkout": "Go to checkout",
+    "view": "View details",
+    "item": "In your cart",
+    "recommended": "Recommended for you",
+    "explore": "Explore catalog",
+    "add": "Add",
+    "addToCart": "Add to cart"
+  }
+}

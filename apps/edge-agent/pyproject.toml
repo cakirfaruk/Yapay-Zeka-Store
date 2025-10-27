@@ -1,0 +1,15 @@
+[project]
+name = "ai-edge-agent"
+version = "0.1.0"
+description = "Edge agent simulator for AI marketplace"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "paho-mqtt",
+  "pyyaml",
+  "aiohttp",
+  "pynacl"
+]
+
+[project.scripts]
+ai-agent = "ai_agent.__main__:main"

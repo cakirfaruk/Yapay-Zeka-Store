@@ -1,0 +1,65 @@
+{
+  "nav": {
+    "store": "Mağaza",
+    "devices": "Cihazlarım",
+    "developer": "Geliştirici Portalı",
+    "admin": "Yönetim",
+    "cart": "Sepet",
+    "pricing": "Fiyatlandırma"
+  },
+  "home": {
+    "hero": "Her sektör için hazır yapay zeka uygulamaları",
+    "subtitle": "Güvenlikten perakendeye seçili modelleri inceleyin ve cihazlarınıza dağıtın.",
+    "cta": "Kataloğu keşfet",
+    "searchPlaceholder": "Uygulama ara..."
+  },
+  "devices": {
+    "title": "Cihazlarım",
+    "add": "Cihaz kodu üret",
+    "empty": "Henüz cihaz eklenmedi",
+    "deploy": "Yükle",
+    "status": "Durum"
+  },
+  "checkout": {
+    "title": "Ödeme",
+    "buy": "Satın al",
+    "review": "Satın almadan önce kontrol et",
+    "summary": "Sipariş özeti",
+    "category": "Kategori",
+    "boards": "Desteklenen kartlar",
+    "deviceLabel": "Cihaza dağıt",
+    "devicePlaceholder": "Cihaz seç (opsiyonel)",
+    "deviceHelp": "Opsiyonel: Satın alma sonrası seçilen cihaza otomatik dağıtılır.",
+    "complete": "Ödemeyi Tamamla",
+    "success": "Satın alma tamamlandı",
+    "deploy": "Cihaza dağıt",
+    "back": "Mağazaya dön",
+    "empty": "Devam etmek için mağazadan bir uygulama seçin.",
+    "viewCart": "Sepeti görüntüle",
+    "editCart": "Sepete dön",
+    "cartHint": "Gezinmeye devam etmek için uygulamayı sepetinize ekleyin.",
+    "addToCart": "Sepete ekle"
+  },
+  "developer": {
+    "title": "Geliştirici Uygulamaları",
+    "new": "Yeni uygulama",
+    "submit": "İncelemeye gönder",
+    "checklist": "Kontrol listesi"
+  },
+  "admin": {
+    "reviews": "İnceleme kuyruğu",
+    "approve": "Onayla",
+    "requestChanges": "Revizyon iste"
+  },
+  "cart": {
+    "title": "Sepet",
+    "subtitle": "Satın almadan önce öğeleri gözden geçirin.",
+    "empty": "Sepetiniz boş. Mağazadan yapay zeka uygulamaları ekleyin.",
+    "checkout": "Ödemeye git",
+    "view": "Detayları gör",
+    "item": "Sepetinizde",
+    "recommended": "Sizin için önerilenler",
+    "explore": "Kataloğu keşfet",
+    "add": "Ekle"
+  }
+}

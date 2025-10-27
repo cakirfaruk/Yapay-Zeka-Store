@@ -1,0 +1,80 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: aimarket
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+  mqtt:
+    image: eclipse-mosquitto:2
+    ports:
+      - '1883:1883'
+  minio:
+    image: minio/minio:RELEASE.2024-04-18T19-09-19Z
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: minio123
+    command: server /data --console-address :9001
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/aimarket
+      REDIS_URL: redis://redis:6379
+      MQTT_URL: mqtt://mqtt:1883
+      LICENSE_KID: dev-license-key
+      LICENSE_PRIVATE_KEY_PATH: /run/secrets/license_private
+      PUBLIC_LICENSE_KEYS_DIR: /app/infra/keys/public
+      NODE_ENV: production
+    secrets:
+      - license_private
+    ports:
+      - '3001:3001'
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:3001
+    ports:
+      - '3000:3000'
+  gateway:
+    build:
+      context: .
+      dockerfile: apps/device-gateway/Dockerfile
+    depends_on:
+      - api
+      - mqtt
+    environment:
+      API_URL: http://api:3001
+      MQTT_URL: mqtt://mqtt:1883
+    ports:
+      - '4000:4000'
+
+secrets:
+  license_private:
+    file: infra/keys/dev_license_ed25519.pk

@@ -1,0 +1,11 @@
+{
+  "name": "@packages/proto",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "generate": "node ./scripts/generate.cjs"
+  },
+  "devDependencies": {
+    "ts-proto": "^1.165.1"
+  }
+}
