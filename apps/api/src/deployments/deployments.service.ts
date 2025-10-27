@@ -13,6 +13,7 @@ export class DeploymentsService {
     return this.prisma.deployment.create({
       data: {
         deviceId,
+        appId: version.appId,
         appVersionId,
         status: DeploymentStatus.queued,
         logs: `Deployment requested by ${requestedBy} at ${new Date().toISOString()}`,
